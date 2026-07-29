@@ -1,17 +1,22 @@
 package com.example.parking.controller;
 
+import com.example.parking.model.ParkingEvent;
 import com.example.parking.model.ParkingSlot;
 import com.example.parking.repository.ParkingSlotRepository;
 import com.example.parking.view.ParkingView;
+import com.example.parking.repository.ParkingEventRepository;
 
 public class ParkingController {
 
 	private ParkingView parkingView;
 	private ParkingSlotRepository slotRepository;
+	private ParkingEventRepository eventRepository;
 
-	public ParkingController(ParkingView parkingView, ParkingSlotRepository slotRepository) {
+	public ParkingController(ParkingView parkingView, ParkingSlotRepository slotRepository,
+			ParkingEventRepository eventRepository) {
 		this.parkingView = parkingView;
 		this.slotRepository = slotRepository;
+		this.eventRepository = eventRepository;
 	}
 
 	public void addSlot(ParkingSlot slot) {
@@ -24,4 +29,16 @@ public class ParkingController {
 		parkingView.slotAdded(slot);
 	}
 
+	public void markOccupied(String id, String timestamp) {
+		ParkingSlot existingSlot = slotRepository.findById(id);
+		if (existingSlot == null) {
+			parkingView.showError("No existing slot with id " + id, null);
+			return;
+		}
+		ParkingSlot occupiedSlot = new ParkingSlot(id, true);
+		slotRepository.delete(id);
+		slotRepository.save(occupiedSlot);
+		eventRepository.save(new ParkingEvent(id, true, timestamp));
+		parkingView.slotUpdated(occupiedSlot);
+	}
 }
