@@ -114,5 +114,13 @@ public class ParkingControllerTest {
 			.showError("No existing slot with id 1", null);
 		verifyNoMoreInteractions(ignoreStubs(slotRepository));
 	}
+	
+	@Test
+	public void testAllSlots() {
+		java.util.List<ParkingSlot> slots = asList(new ParkingSlot("1", false));
+		when(slotRepository.findAll()).thenReturn(slots);
+		parkingController.allSlots();
+		verify(parkingView).showAllSlots(slots);
+	}
 
 }

@@ -54,4 +54,9 @@ public class ParkingController {
 		eventRepository.save(new ParkingEvent(id, false, timestamp));
 		parkingView.slotUpdated(freeSlot);
 	}
+
+	public void allSlots() {
+		parkingView.showAllSlots(slotRepository.findAll());
+		
+	}
 }
