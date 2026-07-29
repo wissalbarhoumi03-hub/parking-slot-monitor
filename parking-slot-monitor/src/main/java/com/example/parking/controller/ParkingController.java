@@ -59,4 +59,9 @@ public class ParkingController {
 		parkingView.showAllSlots(slotRepository.findAll());
 		
 	}
+
+	public void showHistory() {
+		parkingView.showHistory(eventRepository.findAll());
+		
+	}
 }
