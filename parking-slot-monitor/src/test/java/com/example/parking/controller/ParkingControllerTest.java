@@ -19,6 +19,9 @@ import com.example.parking.model.ParkingSlot;
 import com.example.parking.repository.ParkingSlotRepository;
 import com.example.parking.view.ParkingView;
 
+import com.example.parking.model.ParkingEvent;
+import com.example.parking.repository.ParkingEventRepository;
+
 public class ParkingControllerTest {
 
 	@Mock
@@ -26,6 +29,9 @@ public class ParkingControllerTest {
 
 	@Mock
 	private ParkingView parkingView;
+	
+	@Mock
+	private ParkingEventRepository eventRepository;
 
 	@InjectMocks
 	private ParkingController parkingController;
@@ -60,6 +66,29 @@ public class ParkingControllerTest {
 		parkingController.addSlot(slotToAdd);
 		verify(parkingView)
 			.showError("Already existing slot with id 1", existingSlot);
+		verifyNoMoreInteractions(ignoreStubs(slotRepository));
+	}
+	
+	@Test
+	public void testMarkOccupiedWhenSlotExists() {
+		ParkingSlot existingSlot = new ParkingSlot("1", false);
+		when(slotRepository.findById("1")).thenReturn(existingSlot);
+		ParkingSlot occupiedSlot = new ParkingSlot("1", true);
+		ParkingEvent event = new ParkingEvent("1", true, "2026-01-01T10:00:00");
+		parkingController.markOccupied("1", "2026-01-01T10:00:00");
+		InOrder inOrder = inOrder(slotRepository, eventRepository, parkingView);
+		inOrder.verify(slotRepository).delete("1");
+		inOrder.verify(slotRepository).save(occupiedSlot);
+		inOrder.verify(eventRepository).save(event);
+		inOrder.verify(parkingView).slotUpdated(occupiedSlot);
+	}
+
+	@Test
+	public void testMarkOccupiedWhenSlotDoesNotExist() {
+		when(slotRepository.findById("1")).thenReturn(null);
+		parkingController.markOccupied("1", "2026-01-01T10:00:00");
+		verify(parkingView)
+			.showError("No existing slot with id 1", null);
 		verifyNoMoreInteractions(ignoreStubs(slotRepository));
 	}
 
