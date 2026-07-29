@@ -64,4 +64,17 @@ public class ParkingController {
 		parkingView.showHistory(eventRepository.findAll());
 		
 	}
+
+	public void countSlots() {
+		int occupied = 0;
+		int free = 0;
+		for (ParkingSlot slot : slotRepository.findAll()) {
+			if (slot.isOccupied()) {
+				occupied++;
+			} else {
+				free++;
+			}
+		}
+		parkingView.showCounts(free, occupied);
+	}
 }

@@ -131,5 +131,16 @@ public class ParkingControllerTest {
 		parkingController.showHistory();
 		verify(parkingView).showHistory(events);
 	}
+	
+	@Test
+	public void testCountSlots() {
+		java.util.List<ParkingSlot> slots = asList(
+			new ParkingSlot("1", false),
+			new ParkingSlot("2", true),
+			new ParkingSlot("3", false));
+		when(slotRepository.findAll()).thenReturn(slots);
+		parkingController.countSlots();
+		verify(parkingView).showCounts(2, 1);
+	}
 
 }
