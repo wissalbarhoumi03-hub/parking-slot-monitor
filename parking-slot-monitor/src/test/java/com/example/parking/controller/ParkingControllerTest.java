@@ -91,5 +91,28 @@ public class ParkingControllerTest {
 			.showError("No existing slot with id 1", null);
 		verifyNoMoreInteractions(ignoreStubs(slotRepository));
 	}
+	
+	@Test
+	public void testMarkFreeWhenSlotExists() {
+		ParkingSlot existingSlot = new ParkingSlot("1", true);
+		when(slotRepository.findById("1")).thenReturn(existingSlot);
+		ParkingSlot freeSlot = new ParkingSlot("1", false);
+		ParkingEvent event = new ParkingEvent("1", false, "2026-01-01T10:00:00");
+		parkingController.markFree("1", "2026-01-01T10:00:00");
+		InOrder inOrder = inOrder(slotRepository, eventRepository, parkingView);
+		inOrder.verify(slotRepository).delete("1");
+		inOrder.verify(slotRepository).save(freeSlot);
+		inOrder.verify(eventRepository).save(event);
+		inOrder.verify(parkingView).slotUpdated(freeSlot);
+	}
+
+	@Test
+	public void testMarkFreeWhenSlotDoesNotExist() {
+		when(slotRepository.findById("1")).thenReturn(null);
+		parkingController.markFree("1", "2026-01-01T10:00:00");
+		verify(parkingView)
+			.showError("No existing slot with id 1", null);
+		verifyNoMoreInteractions(ignoreStubs(slotRepository));
+	}
 
 }
