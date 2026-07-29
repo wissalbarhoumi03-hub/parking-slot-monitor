@@ -1,8 +1,12 @@
 package com.example.parking.view;
 
+import java.util.List;
+
 import com.example.parking.model.ParkingSlot;
 
 public interface ParkingView {
+	
+	void showAllSlots(List<ParkingSlot> slots);
 
 	void slotAdded(ParkingSlot slot);
 	
