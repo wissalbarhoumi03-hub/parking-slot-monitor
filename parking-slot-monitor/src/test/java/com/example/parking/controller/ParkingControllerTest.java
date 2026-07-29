@@ -122,5 +122,14 @@ public class ParkingControllerTest {
 		parkingController.allSlots();
 		verify(parkingView).showAllSlots(slots);
 	}
+	
+	@Test
+	public void testShowHistory() {
+		java.util.List<ParkingEvent> events =
+			asList(new ParkingEvent("1", true, "2026-01-01T10:00:00"));
+		when(eventRepository.findAll()).thenReturn(events);
+		parkingController.showHistory();
+		verify(parkingView).showHistory(events);
+	}
 
 }
