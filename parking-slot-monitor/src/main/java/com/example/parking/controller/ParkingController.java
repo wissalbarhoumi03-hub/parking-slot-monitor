@@ -30,8 +30,7 @@ public class ParkingController {
 	}
 
 	public void markOccupied(String id, String timestamp) {
-		ParkingSlot existingSlot = slotRepository.findById(id);
-		if (existingSlot == null) {
+		if (slotRepository.findById(id) == null) {
 			parkingView.showError("No existing slot with id " + id, null);
 			return;
 		}
@@ -43,8 +42,7 @@ public class ParkingController {
 	}
 
 	public void markFree(String id, String timestamp) {
-		ParkingSlot existingSlot = slotRepository.findById(id);
-		if (existingSlot == null) {
+		if (slotRepository.findById(id) == null) {
 			parkingView.showError("No existing slot with id " + id, null);
 			return;
 		}
