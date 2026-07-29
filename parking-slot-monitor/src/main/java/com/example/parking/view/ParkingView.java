@@ -11,6 +11,8 @@ public interface ParkingView {
 
 	void showHistory(List<ParkingEvent> events);
 	
+	void showCounts(int free, int occupied);
+	
 	void slotAdded(ParkingSlot slot);
 	
 	void slotUpdated(ParkingSlot slot);
