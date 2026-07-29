@@ -41,4 +41,17 @@ public class ParkingController {
 		eventRepository.save(new ParkingEvent(id, true, timestamp));
 		parkingView.slotUpdated(occupiedSlot);
 	}
+
+	public void markFree(String id, String timestamp) {
+		ParkingSlot existingSlot = slotRepository.findById(id);
+		if (existingSlot == null) {
+			parkingView.showError("No existing slot with id " + id, null);
+			return;
+		}
+		ParkingSlot freeSlot = new ParkingSlot(id, false);
+		slotRepository.delete(id);
+		slotRepository.save(freeSlot);
+		eventRepository.save(new ParkingEvent(id, false, timestamp));
+		parkingView.slotUpdated(freeSlot);
+	}
 }
