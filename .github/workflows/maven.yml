@@ -1,4 +1,4 @@
-# This workflow will build a Java project with Maven
+﻿# This workflow will build a Java project with Maven
 name: Java CI with Maven in Linux
 
 on:
@@ -23,4 +23,6 @@ jobs:
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2-
     - name: Build with Maven
-      run: mvn -f parking-slot-monitor/pom.xml clean verify
+      run: mvn -f parking-slot-monitor/pom.xml clean verify -Pjacoco coveralls:report
+      env:
+        COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
