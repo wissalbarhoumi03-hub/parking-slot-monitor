@@ -37,5 +37,17 @@ public class ParkingSwingViewTest extends AssertJSwingJUnitTestCase {
 		window.button(JButtonMatcher.withText("Mark Free")).requireDisabled();
 		window.label("errorMessageLabel").requireText(" ");
 	}
+	
+	@Test
+	public void testWhenIdIsNonEmptyThenAddButtonShouldBeEnabled() {
+		window.textBox("idTextBox").enterText("1");
+		window.button(JButtonMatcher.withText("Add")).requireEnabled();
+	}
+	
+	@Test
+	public void testWhenIdIsBlankThenAddButtonShouldBeDisabled() {
+		window.textBox("idTextBox").enterText(" ");
+		window.button(JButtonMatcher.withText("Add")).requireDisabled();
+	}
 
 }
