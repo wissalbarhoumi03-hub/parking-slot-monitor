@@ -18,6 +18,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JList;
 import javax.swing.DefaultListModel;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class ParkingSwingView extends JFrame implements ParkingView {
 
@@ -73,6 +75,14 @@ public class ParkingSwingView extends JFrame implements ParkingView {
 
 		textField = new JTextField();
 		textField.setName("idTextBox");
+		textField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				btnNewButton.setEnabled(
+					!textField.getText().trim().isEmpty()
+				);
+			}
+		});
 		GridBagConstraints gbc_textField = new GridBagConstraints();
 		gbc_textField.insets = new Insets(0, 0, 5, 0);
 		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
