@@ -23,6 +23,6 @@ jobs:
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2-
     - name: Build with Maven
-      run: mvn -f parking-slot-monitor/pom.xml clean verify -Pjacoco coveralls:report
+      run: xvfb-run mvn -f parking-slot-monitor/pom.xml clean verify -Pjacoco coveralls:report
       env:
         COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
