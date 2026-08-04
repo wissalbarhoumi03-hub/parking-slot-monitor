@@ -6,6 +6,9 @@ import org.assertj.swing.junit.runner.GUITestRunner;
 import org.assertj.swing.junit.testcase.AssertJSwingJUnitTestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.assertj.swing.annotation.GUITest;
+import org.assertj.swing.core.matcher.JButtonMatcher;
+import org.assertj.swing.core.matcher.JLabelMatcher;
 
 @RunWith(GUITestRunner.class)
 public class ParkingSwingViewTest extends AssertJSwingJUnitTestCase {
@@ -24,9 +27,15 @@ public class ParkingSwingViewTest extends AssertJSwingJUnitTestCase {
 		window.show(); // shows the frame to test
 	}
 
-	@Test
-	public void test() {
-		// just to check the setup works
+	@Test @GUITest
+	public void testControlsInitialStates() {
+		window.label(JLabelMatcher.withText("id"));
+		window.textBox("idTextBox").requireEnabled();
+		window.button(JButtonMatcher.withText("Add")).requireDisabled();
+		window.list("slotList");
+		window.button(JButtonMatcher.withText("Mark Occupied")).requireDisabled();
+		window.button(JButtonMatcher.withText("Mark Free")).requireDisabled();
+		window.label("errorMessageLabel").requireText(" ");
 	}
 
 }
