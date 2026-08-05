@@ -18,8 +18,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JList;
 import javax.swing.DefaultListModel;
+import javax.swing.ListSelectionModel;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.JScrollPane;
 
 public class ParkingSwingView extends JFrame implements ParkingView {
 
@@ -90,6 +94,7 @@ public class ParkingSwingView extends JFrame implements ParkingView {
 		gbc_textField.gridy = 0;
 		getContentPane().add(textField, gbc_textField);
 		textField.setColumns(10);
+
 		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
 		gbc_btnNewButton.anchor = GridBagConstraints.WEST;
 		gbc_btnNewButton.insets = new Insets(0, 0, 5, 0);
@@ -101,6 +106,7 @@ public class ParkingSwingView extends JFrame implements ParkingView {
 			}
 		});
 		getContentPane().add(btnNewButton, gbc_btnNewButton);
+
 		GridBagConstraints gbc_btnMarkOccupied = new GridBagConstraints();
 		gbc_btnMarkOccupied.anchor = GridBagConstraints.NORTHWEST;
 		gbc_btnMarkOccupied.insets = new Insets(0, 0, 5, 0);
@@ -132,16 +138,26 @@ public class ParkingSwingView extends JFrame implements ParkingView {
 		lblNewLabel_1.setName("errorMessageLabel");
 		getContentPane().add(lblNewLabel_1, gbc_lblNewLabel_1);
 
+		JScrollPane scrollPane = new JScrollPane();
+		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
+		gbc_scrollPane.fill = GridBagConstraints.BOTH;
+		gbc_scrollPane.gridx = 1;
+		gbc_scrollPane.gridy = 5;
+		getContentPane().add(scrollPane, gbc_scrollPane);
+
 		listSlotsModel = new DefaultListModel<>();
 		listSlots = new JList<>(listSlotsModel);
+		listSlots.addListSelectionListener(new ListSelectionListener() {
+			@Override
+			public void valueChanged(ListSelectionEvent e) {
+				boolean slotSelected = listSlots.getSelectedIndex() != -1;
+				btnMarkOccupied.setEnabled(slotSelected);
+				btnNewButton_1.setEnabled(slotSelected);
+			}
+		});
+		listSlots.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listSlots.setName("slotList");
-		GridBagConstraints gbc_list = new GridBagConstraints();
-		gbc_list.fill = GridBagConstraints.BOTH;
-		gbc_list.gridx = 1;
-		gbc_list.gridy = 5;
-		getContentPane().add(listSlots, gbc_list);
-
-	}
+		scrollPane.setViewportView(listSlots);}
 
 	@Override
 	public void showAllSlots(List<ParkingSlot> slots) {

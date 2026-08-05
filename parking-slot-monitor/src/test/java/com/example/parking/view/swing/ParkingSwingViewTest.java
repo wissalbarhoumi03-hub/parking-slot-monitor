@@ -9,6 +9,8 @@ import org.junit.runner.RunWith;
 import org.assertj.swing.annotation.GUITest;
 import org.assertj.swing.core.matcher.JButtonMatcher;
 import org.assertj.swing.core.matcher.JLabelMatcher;
+import org.assertj.swing.fixture.JButtonFixture;
+import com.example.parking.model.ParkingSlot;
 
 @RunWith(GUITestRunner.class)
 public class ParkingSwingViewTest extends AssertJSwingJUnitTestCase {
@@ -50,4 +52,20 @@ public class ParkingSwingViewTest extends AssertJSwingJUnitTestCase {
 		window.button(JButtonMatcher.withText("Add")).requireDisabled();
 	}
 
+	@Test
+	public void testMarkButtonsShouldBeEnabledOnlyWhenASlotIsSelected() {
+		GuiActionRunner.execute(() ->
+			parkingSwingView.getListSlotsModel().addElement(new ParkingSlot("1", false)));
+		window.list("slotList").selectItem(0);
+		JButtonFixture markOccupiedButton =
+			window.button(JButtonMatcher.withText("Mark Occupied"));
+		JButtonFixture markFreeButton =
+			window.button(JButtonMatcher.withText("Mark Free"));
+		markOccupiedButton.requireEnabled();
+		markFreeButton.requireEnabled();
+		window.list("slotList").clearSelection();
+		markOccupiedButton.requireDisabled();
+		markFreeButton.requireDisabled();
+	}
+	
 }
