@@ -26,6 +26,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.JScrollPane;
 import com.example.parking.controller.ParkingController;
 import java.time.LocalDateTime;
+import javax.swing.SwingUtilities;
 
 public class ParkingSwingView extends JFrame implements ParkingView {
 
@@ -97,7 +98,9 @@ public class ParkingSwingView extends JFrame implements ParkingView {
 		btnNewButton.setEnabled(false);
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				parkingController.addSlot(new ParkingSlot(textField.getText(), false));
+				new Thread(() ->
+					parkingController.addSlot(new ParkingSlot(textField.getText(), false))
+				).start();
 			}
 		});
 		getContentPane().add(btnNewButton, gbc_btnNewButton);
@@ -110,10 +113,12 @@ public class ParkingSwingView extends JFrame implements ParkingView {
 		btnMarkOccupied.setEnabled(false);
 		btnMarkOccupied.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				parkingController.markOccupied(
-					listSlots.getSelectedValue().getId(),
-					LocalDateTime.now().toString()
-				);
+				new Thread(() ->
+					parkingController.markOccupied(
+						listSlots.getSelectedValue().getId(),
+						LocalDateTime.now().toString()
+					)
+				).start();
 			}
 		});
 		getContentPane().add(btnMarkOccupied, gbc_btnMarkOccupied);
@@ -126,10 +131,12 @@ public class ParkingSwingView extends JFrame implements ParkingView {
 		btnNewButton_1.setEnabled(false);
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				parkingController.markFree(
-					listSlots.getSelectedValue().getId(),
-					LocalDateTime.now().toString()
-				);
+				new Thread(() ->
+					parkingController.markFree(
+						listSlots.getSelectedValue().getId(),
+						LocalDateTime.now().toString()
+					)
+				).start();
 			}
 		});
 		getContentPane().add(btnNewButton_1, gbc_btnNewButton_1);
@@ -180,38 +187,50 @@ public class ParkingSwingView extends JFrame implements ParkingView {
 
 	@Override
 	public void showAllSlots(List<ParkingSlot> slots) {
-		slots.stream().forEach(listSlotsModel::addElement);
+		SwingUtilities.invokeLater(() ->
+			slots.stream().forEach(listSlotsModel::addElement)
+		);
 	}
 
 	@Override
 	public void showHistory(List<ParkingEvent> events) {
-		events.stream().forEach(listHistoryModel::addElement);
+		SwingUtilities.invokeLater(() ->
+			events.stream().forEach(listHistoryModel::addElement)
+		);
 	}
 
 	@Override
 	public void showCounts(int free, int occupied) {
-		countsLabel.setText("Free: " + free + " - Occupied: " + occupied);
+		SwingUtilities.invokeLater(() ->
+			countsLabel.setText("Free: " + free + " - Occupied: " + occupied)
+		);
 	}
 
 	@Override
 	public void slotAdded(ParkingSlot slot) {
-		listSlotsModel.addElement(slot);
-		resetErrorLabel();
+		SwingUtilities.invokeLater(() -> {
+			listSlotsModel.addElement(slot);
+			resetErrorLabel();
+		});
 	}
 
 	@Override
 	public void slotUpdated(ParkingSlot slot) {
-		for (int i = 0; i < listSlotsModel.getSize(); i++) {
-			if (listSlotsModel.getElementAt(i).getId().equals(slot.getId())) {
-				listSlotsModel.setElementAt(slot, i);
+		SwingUtilities.invokeLater(() -> {
+			for (int i = 0; i < listSlotsModel.getSize(); i++) {
+				if (listSlotsModel.getElementAt(i).getId().equals(slot.getId())) {
+					listSlotsModel.setElementAt(slot, i);
+				}
 			}
-		}
-		resetErrorLabel();
+			resetErrorLabel();
+		});
 	}
 
 	@Override
 	public void showError(String message, ParkingSlot slot) {
-		lblNewLabel_1.setText(message + ": " + slot);
+		SwingUtilities.invokeLater(() ->
+			lblNewLabel_1.setText(message + ": " + slot)
+		);
 	}
 
 	private void resetErrorLabel() {

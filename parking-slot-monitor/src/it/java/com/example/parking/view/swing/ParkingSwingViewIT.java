@@ -25,6 +25,12 @@ import com.mongodb.ServerAddress;
 import de.bwaldvogel.mongo.MongoServer;
 import de.bwaldvogel.mongo.backend.memory.MemoryBackend;
 
+import static org.awaitility.Awaitility.await;
+import java.util.concurrent.TimeUnit;
+import static org.assertj.swing.timing.Pause.pause;
+import static org.assertj.swing.timing.Timeout.timeout;
+import org.assertj.swing.timing.Condition;
+
 @RunWith(GUITestRunner.class)
 public class ParkingSwingViewIT extends AssertJSwingJUnitTestCase {
 
@@ -38,6 +44,7 @@ public class ParkingSwingViewIT extends AssertJSwingJUnitTestCase {
 	private ParkingController parkingController;
 	private ParkingSlotMongoRepository slotRepository;
 	private ParkingEventMongoRepository eventRepository;
+	private static final long TIMEOUT = 5000;
 
 	@BeforeClass
 	public static void setupServer() {
@@ -90,8 +97,10 @@ public class ParkingSwingViewIT extends AssertJSwingJUnitTestCase {
 	public void testAddButtonSuccess() {
 		window.textBox("idTextBox").enterText("1");
 		window.button(JButtonMatcher.withText("Add")).click();
-		assertThat(window.list("slotList").contents())
-			.containsExactly(new ParkingSlot("1", false).toString());
+		await().atMost(5, TimeUnit.SECONDS).untilAsserted(() ->
+			assertThat(window.list("slotList").contents())
+				.containsExactly(new ParkingSlot("1", false).toString())
+		);
 	}
 
 	@Test @GUITest
@@ -99,6 +108,15 @@ public class ParkingSwingViewIT extends AssertJSwingJUnitTestCase {
 		slotRepository.save(new ParkingSlot("1", false));
 		window.textBox("idTextBox").enterText("1");
 		window.button(JButtonMatcher.withText("Add")).click();
+		pause(
+			new Condition("Error label to contain text") {
+				@Override
+				public boolean test() {
+					return !window.label("errorMessageLabel")
+						.text().trim().isEmpty();
+				}
+			}
+		, timeout(TIMEOUT));
 		assertThat(window.list("slotList").contents())
 			.isEmpty();
 		window.label("errorMessageLabel")
@@ -112,8 +130,10 @@ public class ParkingSwingViewIT extends AssertJSwingJUnitTestCase {
 			() -> parkingController.addSlot(new ParkingSlot("1", false)));
 		window.list("slotList").selectItem(0);
 		window.button(JButtonMatcher.withText("Mark Occupied")).click();
-		assertThat(window.list("slotList").contents())
-			.containsExactly(new ParkingSlot("1", true).toString());
+		await().atMost(5, TimeUnit.SECONDS).untilAsserted(() ->
+			assertThat(window.list("slotList").contents())
+				.containsExactly(new ParkingSlot("1", true).toString())
+		);
 	}
 
 	@Test @GUITest
@@ -122,7 +142,9 @@ public class ParkingSwingViewIT extends AssertJSwingJUnitTestCase {
 			() -> parkingController.addSlot(new ParkingSlot("1", true)));
 		window.list("slotList").selectItem(0);
 		window.button(JButtonMatcher.withText("Mark Free")).click();
-		assertThat(window.list("slotList").contents())
-			.containsExactly(new ParkingSlot("1", false).toString());
+		await().atMost(5, TimeUnit.SECONDS).untilAsserted(() ->
+			assertThat(window.list("slotList").contents())
+				.containsExactly(new ParkingSlot("1", false).toString())
+		);
 	}
 }
