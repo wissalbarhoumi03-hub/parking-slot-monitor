@@ -21,6 +21,7 @@ import com.example.parking.model.ParkingEvent;
 import static org.mockito.Mockito.verify;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.timeout;
 
 @RunWith(GUITestRunner.class)
 public class ParkingSwingViewTest extends AssertJSwingJUnitTestCase {
@@ -33,6 +34,8 @@ public class ParkingSwingViewTest extends AssertJSwingJUnitTestCase {
 	private ParkingController parkingController;
 	
 	private AutoCloseable closeable;
+	
+	private static final int TIMEOUT = 5000;
 	
 
 	@Override
@@ -116,9 +119,7 @@ public class ParkingSwingViewTest extends AssertJSwingJUnitTestCase {
 	@Test
 	public void testSlotAddedShouldAddTheSlotToTheListAndResetTheErrorLabel() {
 		ParkingSlot slot = new ParkingSlot("1", false);
-		GuiActionRunner.execute(
-			() -> parkingSwingView.slotAdded(slot)
-		);
+		parkingSwingView.slotAdded(slot);
 		String[] listContents = window.list("slotList").contents();
 		assertThat(listContents).containsExactly(slot.toString());
 		window.label("errorMessageLabel").requireText(" ");
@@ -165,7 +166,7 @@ public class ParkingSwingViewTest extends AssertJSwingJUnitTestCase {
 	public void testAddButtonShouldDelegateToControllerAddSlot() {
 		window.textBox("idTextBox").enterText("1");
 		window.button(JButtonMatcher.withText("Add")).click();
-		verify(parkingController).addSlot(new ParkingSlot("1", false));
+		verify(parkingController, timeout(TIMEOUT)).addSlot(new ParkingSlot("1", false));
 	}
 	
 	@Test
@@ -175,7 +176,7 @@ public class ParkingSwingViewTest extends AssertJSwingJUnitTestCase {
 			() -> parkingSwingView.getListSlotsModel().addElement(slot));
 		window.list("slotList").selectItem(0);
 		window.button(JButtonMatcher.withText("Mark Occupied")).click();
-		verify(parkingController).markOccupied(eq("1"), anyString());
+		verify(parkingController, timeout(TIMEOUT)).markOccupied(eq("1"), anyString());
 	}
 	
 	@Test
@@ -185,7 +186,7 @@ public class ParkingSwingViewTest extends AssertJSwingJUnitTestCase {
 			() -> parkingSwingView.getListSlotsModel().addElement(slot));
 		window.list("slotList").selectItem(0);
 		window.button(JButtonMatcher.withText("Mark Free")).click();
-		verify(parkingController).markFree(eq("1"), anyString());
+		verify(parkingController, timeout(TIMEOUT)).markFree(eq("1"), anyString());
 	}
 	
 	@Test
