@@ -19,7 +19,7 @@ public class ParkingController {
 		this.eventRepository = eventRepository;
 	}
 
-	public void addSlot(ParkingSlot slot) {
+	public synchronized void addSlot(ParkingSlot slot) {
 		ParkingSlot existingSlot = slotRepository.findById(slot.getId());
 		if (existingSlot != null) {
 			parkingView.showError("Already existing slot with id " + slot.getId(), existingSlot);
@@ -29,7 +29,7 @@ public class ParkingController {
 		parkingView.slotAdded(slot);
 	}
 
-	public void markOccupied(String id, String timestamp) {
+	public synchronized void markOccupied(String id, String timestamp) {
 		if (slotRepository.findById(id) == null) {
 			parkingView.showError("No existing slot with id " + id, null);
 			return;
@@ -41,7 +41,7 @@ public class ParkingController {
 		parkingView.slotUpdated(occupiedSlot);
 	}
 
-	public void markFree(String id, String timestamp) {
+	public synchronized void markFree(String id, String timestamp) {
 		if (slotRepository.findById(id) == null) {
 			parkingView.showError("No existing slot with id " + id, null);
 			return;
