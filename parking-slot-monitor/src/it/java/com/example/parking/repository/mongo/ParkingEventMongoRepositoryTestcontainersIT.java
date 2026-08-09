@@ -36,7 +36,9 @@ public class ParkingEventMongoRepositoryTestcontainersIT {
 			new ServerAddress(
 				mongo.getHost(),
 				mongo.getMappedPort(27017)));
-		eventRepository = new ParkingEventMongoRepository(client);
+		eventRepository = new ParkingEventMongoRepository(client,
+				ParkingEventMongoRepository.PARKING_DB_NAME,
+				ParkingEventMongoRepository.EVENT_COLLECTION_NAME);
 		MongoDatabase database = client.getDatabase(
 				ParkingEventMongoRepository.PARKING_DB_NAME);
 		// make sure we always start with a clean database

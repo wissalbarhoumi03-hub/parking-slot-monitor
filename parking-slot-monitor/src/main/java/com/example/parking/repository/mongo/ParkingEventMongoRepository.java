@@ -16,11 +16,13 @@ public class ParkingEventMongoRepository implements ParkingEventRepository {
 
 	private MongoCollection<Document> eventCollection;
 
-	public ParkingEventMongoRepository(MongoClient client) {
+	public ParkingEventMongoRepository(MongoClient client,
+			String databaseName, String collectionName) {
 		eventCollection = client
-				.getDatabase(PARKING_DB_NAME)
-				.getCollection(EVENT_COLLECTION_NAME);
+				.getDatabase(databaseName)
+				.getCollection(collectionName);
 	}
+	
 	@Override
 	public List<ParkingEvent> findAll() {
 		return StreamSupport

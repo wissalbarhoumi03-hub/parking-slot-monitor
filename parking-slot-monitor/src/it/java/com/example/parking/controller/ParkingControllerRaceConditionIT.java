@@ -64,8 +64,12 @@ public class ParkingControllerRaceConditionIT {
 			database.getCollection(ParkingSlotMongoRepository.SLOT_COLLECTION_NAME);
 		slotCollection.createIndex(
 			Indexes.ascending("id"), new IndexOptions().unique(true));
-		slotRepository = new ParkingSlotMongoRepository(client);
-		eventRepository = new ParkingEventMongoRepository(client);
+		slotRepository = new ParkingSlotMongoRepository(client,
+				ParkingSlotMongoRepository.PARKING_DB_NAME,
+				ParkingSlotMongoRepository.SLOT_COLLECTION_NAME);
+		eventRepository = new ParkingEventMongoRepository(client,
+				ParkingEventMongoRepository.PARKING_DB_NAME,
+				ParkingEventMongoRepository.EVENT_COLLECTION_NAME);
 	}
 
 	@After

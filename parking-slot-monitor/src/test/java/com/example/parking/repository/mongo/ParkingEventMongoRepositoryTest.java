@@ -48,7 +48,9 @@ public class ParkingEventMongoRepositoryTest {
 	@Before
 	public void setup() {
 		client = new MongoClient(new ServerAddress(serverAddress));
-		eventRepository = new ParkingEventMongoRepository(client);
+		eventRepository = new ParkingEventMongoRepository(client,
+				ParkingEventMongoRepository.PARKING_DB_NAME,
+				ParkingEventMongoRepository.EVENT_COLLECTION_NAME);
 		MongoDatabase database = client.getDatabase(
 				ParkingEventMongoRepository.PARKING_DB_NAME);
 		// make sure we always start with a clean database
