@@ -37,7 +37,9 @@ public class ParkingSlotMongoRepositoryTestcontainersIT {
 			new ServerAddress(
 				mongo.getHost(),
 				mongo.getMappedPort(27017)));
-		slotRepository = new ParkingSlotMongoRepository(client);
+		slotRepository = new ParkingSlotMongoRepository(client,
+				ParkingSlotMongoRepository.PARKING_DB_NAME,
+				ParkingSlotMongoRepository.SLOT_COLLECTION_NAME);
 		MongoDatabase database = client.getDatabase(
 				ParkingSlotMongoRepository.PARKING_DB_NAME);
 		// make sure we always start with a clean database

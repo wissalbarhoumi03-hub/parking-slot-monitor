@@ -19,10 +19,11 @@ public class ParkingSlotMongoRepository implements ParkingSlotRepository {
 
 	private MongoCollection<Document> slotCollection;
 
-	public ParkingSlotMongoRepository(MongoClient client) {
+	public ParkingSlotMongoRepository(MongoClient client,
+			String databaseName, String collectionName) {
 		slotCollection = client
-				.getDatabase(PARKING_DB_NAME)
-				.getCollection(SLOT_COLLECTION_NAME);
+				.getDatabase(databaseName)
+				.getCollection(collectionName);
 	}
 
 	

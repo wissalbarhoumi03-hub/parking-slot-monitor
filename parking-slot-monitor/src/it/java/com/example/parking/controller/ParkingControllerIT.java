@@ -47,8 +47,12 @@ public class ParkingControllerIT {
 				mongo.getMappedPort(27017)));
 		// make sure we always start with a clean database
 		client.getDatabase(ParkingSlotMongoRepository.PARKING_DB_NAME).drop();
-		slotRepository = new ParkingSlotMongoRepository(client);
-		eventRepository = new ParkingEventMongoRepository(client);
+		slotRepository = new ParkingSlotMongoRepository(client,
+				ParkingSlotMongoRepository.PARKING_DB_NAME,
+				ParkingSlotMongoRepository.SLOT_COLLECTION_NAME);
+		eventRepository = new ParkingEventMongoRepository(client,
+				ParkingEventMongoRepository.PARKING_DB_NAME,
+				ParkingEventMongoRepository.EVENT_COLLECTION_NAME);
 		parkingController = new ParkingController(parkingView, slotRepository, eventRepository);
 	}
 	

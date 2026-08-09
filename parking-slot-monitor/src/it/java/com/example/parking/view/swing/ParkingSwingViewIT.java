@@ -60,8 +60,12 @@ public class ParkingSwingViewIT extends AssertJSwingJUnitTestCase {
 	@Override
 	protected void onSetUp() {
 		mongoClient = new MongoClient(new ServerAddress(serverAddress));
-		slotRepository = new ParkingSlotMongoRepository(mongoClient);
-		eventRepository = new ParkingEventMongoRepository(mongoClient);
+		slotRepository = new ParkingSlotMongoRepository(mongoClient,
+				ParkingSlotMongoRepository.PARKING_DB_NAME,
+				ParkingSlotMongoRepository.SLOT_COLLECTION_NAME);
+		eventRepository = new ParkingEventMongoRepository(mongoClient,
+				ParkingEventMongoRepository.PARKING_DB_NAME,
+				ParkingEventMongoRepository.EVENT_COLLECTION_NAME);
 		// explicit empty the database through the repository
 		for (ParkingSlot slot : slotRepository.findAll()) {
 			slotRepository.delete(slot.getId());
