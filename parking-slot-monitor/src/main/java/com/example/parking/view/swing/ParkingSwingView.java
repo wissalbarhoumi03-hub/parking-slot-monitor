@@ -55,6 +55,7 @@ public class ParkingSwingView extends JFrame implements ParkingView {
 	 * Create the frame.
 	 */
 	public ParkingSwingView() {
+		setTitle("Parking View");
 		setBounds(100, 100, 450, 313);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		GridBagLayout gridBagLayout = new GridBagLayout();
