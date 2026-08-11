@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.bson.Document;
@@ -95,11 +94,11 @@ public class ParkingControllerRaceConditionIT {
 					e.printStackTrace();
 				}
 			}))
-			.peek(t -> t.start())
-			.collect(Collectors.toList());
+			.peek(Thread::start)
+			.toList();
 		// wait for all the threads to finish
 		await().atMost(10, SECONDS)
-			.until(() -> threads.stream().noneMatch(t -> t.isAlive()));
+		.until(() -> threads.stream().noneMatch(Thread::isAlive));
 		// there should be a single element in the database
 		assertThat(slotRepository.findAll())
 			.containsExactly(slot);

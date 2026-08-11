@@ -1,7 +1,6 @@
 package com.example.parking.repository.mongo;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import org.bson.Document;
@@ -32,7 +31,7 @@ public class ParkingSlotMongoRepository implements ParkingSlotRepository {
 		return StreamSupport
 				.stream(slotCollection.find().spliterator(), false)
 				.map(this::fromDocumentToSlot)
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	private ParkingSlot fromDocumentToSlot(Document d) {
