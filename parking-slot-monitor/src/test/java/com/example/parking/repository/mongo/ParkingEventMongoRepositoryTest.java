@@ -21,7 +21,6 @@ import de.bwaldvogel.mongo.backend.memory.MemoryBackend;
 import com.example.parking.model.ParkingEvent;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 public class ParkingEventMongoRepositoryTest {
@@ -102,7 +101,7 @@ public class ParkingEventMongoRepositoryTest {
 					"" + d.get("slotId"),
 					(boolean) d.get("occupied"),
 					"" + d.get("timestamp")))
-			.collect(Collectors.toList());
+			.toList();
 	}
 
 }

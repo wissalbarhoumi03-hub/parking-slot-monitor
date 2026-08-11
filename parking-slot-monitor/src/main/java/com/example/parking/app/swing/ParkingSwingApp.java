@@ -15,6 +15,8 @@ import com.mongodb.ServerAddress;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Command(mixinStandardHelpOptions = true)
 public class ParkingSwingApp implements Callable<Void> {
@@ -57,7 +59,8 @@ public class ParkingSwingApp implements Callable<Void> {
 				parkingView.setVisible(true);
 				parkingController.allSlots();
 			} catch (Exception e) {
-				e.printStackTrace();
+				Logger.getLogger(getClass().getName())
+					.log(Level.SEVERE, "Exception", e);
 			}
 		});
 		return null;
