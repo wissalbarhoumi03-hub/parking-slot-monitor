@@ -2,8 +2,8 @@ package com.example.parking.repository.mongo;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import org.bson.Document;
@@ -82,7 +82,7 @@ public class ParkingEventMongoRepositoryTestcontainersIT {
 					"" + d.get("slotId"),
 					(boolean) d.get("occupied"),
 					"" + d.get("timestamp")))
-			.collect(Collectors.toList());
+			.toList();
 	}
 
 	private void addTestEventToDatabase(String slotId, boolean occupied, String timestamp) {

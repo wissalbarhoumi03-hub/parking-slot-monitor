@@ -20,7 +20,6 @@ import de.bwaldvogel.mongo.MongoServer;
 import de.bwaldvogel.mongo.backend.memory.MemoryBackend;
 import com.example.parking.model.ParkingSlot;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 public class ParkingSlotMongoRepositoryTest {
@@ -118,7 +117,7 @@ public class ParkingSlotMongoRepositoryTest {
 		return StreamSupport
 			.stream(slotCollection.find().spliterator(), false)
 			.map(d -> new ParkingSlot("" + d.get("id"), (boolean) d.get("occupied")))
-			.collect(Collectors.toList());
+			.toList();
 	}
 
 }

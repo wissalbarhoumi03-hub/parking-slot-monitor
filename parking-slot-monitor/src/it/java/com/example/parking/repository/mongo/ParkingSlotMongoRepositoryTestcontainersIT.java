@@ -2,6 +2,7 @@ package com.example.parking.repository.mongo;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+
 import org.bson.Document;
 import org.junit.After;
 import org.junit.Before;
@@ -17,7 +18,6 @@ import com.mongodb.client.MongoDatabase;
 import com.example.parking.model.ParkingSlot;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 public class ParkingSlotMongoRepositoryTestcontainersIT {
@@ -96,7 +96,7 @@ public class ParkingSlotMongoRepositoryTestcontainersIT {
 		return StreamSupport
 			.stream(slotCollection.find().spliterator(), false)
 			.map(d -> new ParkingSlot("" + d.get("id"), (boolean) d.get("occupied")))
-			.collect(Collectors.toList());
+			.toList();
 	}
 	
 	private void addTestSlotToDatabase(String id, boolean occupied) {
