@@ -22,6 +22,8 @@ import java.awt.event.KeyEvent;
 import javax.swing.JScrollPane;
 import com.example.parking.controller.ParkingController;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
@@ -111,7 +113,7 @@ public class ParkingSwingView extends JFrame implements ParkingView {
 		new Thread(() ->
 			parkingController.markOccupied(
 				listSlots.getSelectedValue().getId(),
-				LocalDateTime.now().toString()
+				LocalDateTime.now(ZoneId.systemDefault()).toString()
 			)
 		).start()
 	      );
@@ -127,7 +129,7 @@ public class ParkingSwingView extends JFrame implements ParkingView {
 		new Thread(() ->
 			parkingController.markFree(
 				listSlots.getSelectedValue().getId(),
-				LocalDateTime.now().toString()
+				LocalDateTime.now(ZoneId.systemDefault()).toString()
 			)
 		).start());
 		getContentPane().add(btnNewButton_1, gbc_btnNewButton_1);
