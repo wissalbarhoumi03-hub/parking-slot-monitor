@@ -10,7 +10,6 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.junit.After;
@@ -66,11 +65,11 @@ public class ParkingControllerRaceConditionTest {
 		// start the threads calling addSlot concurrently
 		List<Thread> threads = IntStream.range(0, 10)
 			.mapToObj(i -> new Thread(() -> parkingController.addSlot(slot)))
-			.peek(t -> t.start())
-			.collect(Collectors.toList());
+			.peek(Thread::start)
+			.toList();
 		// wait for all the threads to finish
 		await().atMost(10, SECONDS)
-			.until(() -> threads.stream().noneMatch(t -> t.isAlive()));
+		.until(() -> threads.stream().noneMatch(Thread::isAlive));
 		// there should be a single element in the list
 		assertThat(slots)
 			.containsExactly(slot);
