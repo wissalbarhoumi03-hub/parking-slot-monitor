@@ -34,10 +34,11 @@ jobs:
     - name: Set Maven Additional Goals
       run: |
         echo "SONARGOAL=sonar:sonar" >> $GITHUB_ENV
+        echo "COVERALLSGOAL=coveralls:report" >> $GITHUB_ENV
       if: ${{ env.SONAR_TOKEN && matrix.java == 17 }}
     - name: Build with Maven and SonarCloud
       run: >
-        xvfb-run mvn -f parking-slot-monitor/pom.xml verify -Pjacoco coveralls:report $SONARGOAL
+        xvfb-run mvn -f parking-slot-monitor/pom.xml verify -Pjacoco $COVERALLSGOAL $SONARGOAL
         -Dsonar.organization=wissalbarhoumi03-hub
         -Dsonar.host.url=https://sonarcloud.io
         -Dsonar.projectKey=wissalbarhoumi03-hub_parking-slot-monitor
