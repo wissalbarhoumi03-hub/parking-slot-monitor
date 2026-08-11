@@ -27,6 +27,7 @@ import javax.swing.JScrollPane;
 import com.example.parking.controller.ParkingController;
 import java.time.LocalDateTime;
 import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
 
 public class ParkingSwingView extends JFrame implements ParkingView {
 
@@ -57,7 +58,7 @@ public class ParkingSwingView extends JFrame implements ParkingView {
 	public ParkingSwingView() {
 		setTitle("Parking View");
 		setBounds(100, 100, 450, 313);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0, 0};
 		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0};
@@ -189,14 +190,14 @@ public class ParkingSwingView extends JFrame implements ParkingView {
 	@Override
 	public void showAllSlots(List<ParkingSlot> slots) {
 		SwingUtilities.invokeLater(() ->
-			slots.stream().forEach(listSlotsModel::addElement)
+		slots.forEach(listSlotsModel::addElement)
 		);
 	}
 
 	@Override
 	public void showHistory(List<ParkingEvent> events) {
 		SwingUtilities.invokeLater(() ->
-			events.stream().forEach(listHistoryModel::addElement)
+		events.forEach(listHistoryModel::addElement)
 		);
 	}
 

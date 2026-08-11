@@ -1,13 +1,11 @@
 package com.example.parking.repository.mongo;
 
 import java.util.List;
-
 import com.example.parking.model.ParkingEvent;
 import com.example.parking.repository.ParkingEventRepository;
 import org.bson.Document;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 public class ParkingEventMongoRepository implements ParkingEventRepository {
 
@@ -28,7 +26,7 @@ public class ParkingEventMongoRepository implements ParkingEventRepository {
 		return StreamSupport
 				.stream(eventCollection.find().spliterator(), false)
 				.map(this::fromDocumentToEvent)
-				.collect(Collectors.toList());
+				.toList();
 	}
 
 	private ParkingEvent fromDocumentToEvent(Document d) {
