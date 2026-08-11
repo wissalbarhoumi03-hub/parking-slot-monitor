@@ -14,15 +14,11 @@ import java.awt.GridBagConstraints;
 import javax.swing.JTextField;
 import java.awt.Insets;
 import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import javax.swing.JList;
 import javax.swing.DefaultListModel;
 import javax.swing.ListSelectionModel;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.ListSelectionEvent;
 import javax.swing.JScrollPane;
 import com.example.parking.controller.ParkingController;
 import java.time.LocalDateTime;
@@ -98,13 +94,11 @@ public class ParkingSwingView extends JFrame implements ParkingView {
 		gbc_btnNewButton.gridx = 1;
 		gbc_btnNewButton.gridy = 1;
 		btnNewButton.setEnabled(false);
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				new Thread(() ->
-					parkingController.addSlot(new ParkingSlot(textField.getText(), false))
-				).start();
-			}
-		});
+		btnNewButton.addActionListener(e ->
+		new Thread(() ->
+			parkingController.addSlot(new ParkingSlot(textField.getText(), false))
+		).start()
+	      );
 		getContentPane().add(btnNewButton, gbc_btnNewButton);
 
 		GridBagConstraints gbc_btnMarkOccupied = new GridBagConstraints();
@@ -113,16 +107,14 @@ public class ParkingSwingView extends JFrame implements ParkingView {
 		gbc_btnMarkOccupied.gridx = 1;
 		gbc_btnMarkOccupied.gridy = 2;
 		btnMarkOccupied.setEnabled(false);
-		btnMarkOccupied.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				new Thread(() ->
-					parkingController.markOccupied(
-						listSlots.getSelectedValue().getId(),
-						LocalDateTime.now().toString()
-					)
-				).start();
-			}
-		});
+		btnMarkOccupied.addActionListener(e ->
+		new Thread(() ->
+			parkingController.markOccupied(
+				listSlots.getSelectedValue().getId(),
+				LocalDateTime.now().toString()
+			)
+		).start()
+	      );
 		getContentPane().add(btnMarkOccupied, gbc_btnMarkOccupied);
 
 		GridBagConstraints gbc_btnNewButton_1 = new GridBagConstraints();
@@ -131,16 +123,13 @@ public class ParkingSwingView extends JFrame implements ParkingView {
 		gbc_btnNewButton_1.gridx = 1;
 		gbc_btnNewButton_1.gridy = 3;
 		btnNewButton_1.setEnabled(false);
-		btnNewButton_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				new Thread(() ->
-					parkingController.markFree(
-						listSlots.getSelectedValue().getId(),
-						LocalDateTime.now().toString()
-					)
-				).start();
-			}
-		});
+		btnNewButton_1.addActionListener(e ->
+		new Thread(() ->
+			parkingController.markFree(
+				listSlots.getSelectedValue().getId(),
+				LocalDateTime.now().toString()
+			)
+		).start());
 		getContentPane().add(btnNewButton_1, gbc_btnNewButton_1);
 
 		GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
@@ -159,13 +148,10 @@ public class ParkingSwingView extends JFrame implements ParkingView {
 
 		listSlotsModel = new DefaultListModel<>();
 		listSlots = new JList<>(listSlotsModel);
-		listSlots.addListSelectionListener(new ListSelectionListener() {
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				boolean slotSelected = listSlots.getSelectedIndex() != -1;
-				btnMarkOccupied.setEnabled(slotSelected);
-				btnNewButton_1.setEnabled(slotSelected);
-			}
+		listSlots.addListSelectionListener(e -> {
+			boolean slotSelected = listSlots.getSelectedIndex() != -1;
+			btnMarkOccupied.setEnabled(slotSelected);
+			btnNewButton_1.setEnabled(slotSelected);
 		});
 		listSlots.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listSlots.setName("slotList");
