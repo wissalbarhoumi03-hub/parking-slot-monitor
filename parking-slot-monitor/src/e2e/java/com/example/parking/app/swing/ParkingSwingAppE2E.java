@@ -123,4 +123,21 @@ public class ParkingSwingAppE2E extends AssertJSwingJUnitTestCase {
 		assertThat(window.list("slotList").contents())
 			.anySatisfy(e -> assertThat(e).contains(SLOT_FIXTURE_2_ID, "false"));
 	}
+	
+	@Test @GUITest
+	public void testShowCountsButtonSuccess() {
+		window.button(JButtonMatcher.withText("Show Counts")).click();
+		assertThat(window.label("countsLabel").text())
+			.contains("Free: 1", "Occupied: 1");
+	}
+
+	@Test @GUITest
+	public void testShowHistoryButtonSuccess() {
+		window.list("slotList")
+			.selectItem(java.util.regex.Pattern.compile(".*id=" + SLOT_FIXTURE_1_ID + ".*"));
+		window.button(JButtonMatcher.withText("Mark Occupied")).click();
+		window.button(JButtonMatcher.withText("Show History")).click();
+		assertThat(window.list("historyList").contents())
+			.anySatisfy(e -> assertThat(e).contains(SLOT_FIXTURE_1_ID));
+	}
 }

@@ -41,6 +41,8 @@ public class ParkingSwingView extends JFrame implements ParkingView {
     private transient ParkingController parkingController;
     private JList<ParkingEvent> listHistory;
 	private DefaultListModel<ParkingEvent> listHistoryModel;
+	private final JButton btnShowHistory = new JButton("Show History");
+	private final JButton btnShowCounts = new JButton("Show Counts");
 
 	DefaultListModel<ParkingSlot> getListSlotsModel() {
 		return listSlotsModel;
@@ -55,13 +57,13 @@ public class ParkingSwingView extends JFrame implements ParkingView {
 	 */
 	public ParkingSwingView() {
 		setTitle("Parking View");
-		setBounds(100, 100, 450, 313);
+		setBounds(100, 100, 450, 500);
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0, 0};
-		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0};
+		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		gridBagLayout.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
-		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
+		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0, Double.MIN_VALUE};
 		getContentPane().setLayout(gridBagLayout);
 
 		JLabel lblNewLabel = new JLabel("id");
@@ -133,6 +135,30 @@ public class ParkingSwingView extends JFrame implements ParkingView {
 			)
 		).start());
 		getContentPane().add(btnNewButton_1, gbc_btnNewButton_1);
+		
+		GridBagConstraints gbc_btnShowHistory = new GridBagConstraints();
+		gbc_btnShowHistory.anchor = GridBagConstraints.WEST;
+		gbc_btnShowHistory.insets = new Insets(0, 0, 5, 0);
+		gbc_btnShowHistory.gridx = 1;
+		gbc_btnShowHistory.gridy = 8;
+		btnShowHistory.addActionListener(e ->
+			new Thread(() ->
+				parkingController.showHistory()
+			).start()
+		);
+		getContentPane().add(btnShowHistory, gbc_btnShowHistory);
+
+		GridBagConstraints gbc_btnShowCounts = new GridBagConstraints();
+		gbc_btnShowCounts.anchor = GridBagConstraints.WEST;
+		gbc_btnShowCounts.insets = new Insets(0, 0, 5, 0);
+		gbc_btnShowCounts.gridx = 1;
+		gbc_btnShowCounts.gridy = 9;
+		btnShowCounts.addActionListener(e ->
+			new Thread(() ->
+				parkingController.countSlots()
+			).start()
+		);
+		getContentPane().add(btnShowCounts, gbc_btnShowCounts);
 
 		GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
 		gbc_lblNewLabel_1.insets = new Insets(0, 0, 5, 0);
@@ -184,9 +210,10 @@ public class ParkingSwingView extends JFrame implements ParkingView {
 
 	@Override
 	public void showHistory(List<ParkingEvent> events) {
-		SwingUtilities.invokeLater(() ->
-		events.forEach(listHistoryModel::addElement)
-		);
+		SwingUtilities.invokeLater(() -> {
+			listHistoryModel.clear();
+			events.forEach(listHistoryModel::addElement);
+		});
 	}
 
 	@Override

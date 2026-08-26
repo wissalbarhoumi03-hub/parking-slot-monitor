@@ -139,6 +139,11 @@
 						<targetTests>
 							<param>com.example.parking.*</param>
 						</targetTests>
+						<excludedTestClasses>
+							<param>com.example.parking.*IT</param>
+							<param>com.example.parking.*E2E</param>
+							<param>com.example.parking.view.swing.*</param>
+						</excludedTestClasses>
 						<mutators>
 							<mutator>DEFAULTS</mutator>
 						</mutators>

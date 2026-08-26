@@ -204,4 +204,29 @@ public class ParkingSwingViewTest extends AssertJSwingJUnitTestCase {
 		assertThat(listContents).containsExactly(slot.toString());
 	}
 	
+	@Test
+	public void testShowHistoryButtonShouldDelegateToControllerShowHistory() {
+		window.button(JButtonMatcher.withText("Show History")).click();
+		verify(parkingController, timeout(TIMEOUT)).showHistory();
+	}
+
+	@Test
+	public void testShowCountsButtonShouldDelegateToControllerCountSlots() {
+		window.button(JButtonMatcher.withText("Show Counts")).click();
+		verify(parkingController, timeout(TIMEOUT)).countSlots();
+	}
+	
+	@Test
+	public void testShowHistoryShouldClearThePreviousContentsBeforeAddingEvents() {
+		ParkingEvent event1 = new ParkingEvent("1", true, "2026-01-01T10:00");
+		ParkingEvent event2 = new ParkingEvent("2", false, "2026-01-01T11:00");
+		GuiActionRunner.execute(() -> {
+			parkingSwingView.showHistory(Arrays.asList(event1, event2));
+			parkingSwingView.showHistory(Arrays.asList(event1, event2));
+		});
+		String[] listContents = window.list("historyList").contents();
+		assertThat(listContents)
+			.containsExactly(event1.toString(), event2.toString());
+	}
+	
 }
