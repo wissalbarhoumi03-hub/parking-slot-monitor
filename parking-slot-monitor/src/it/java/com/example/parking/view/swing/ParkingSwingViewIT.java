@@ -66,10 +66,8 @@ public class ParkingSwingViewIT extends AssertJSwingJUnitTestCase {
 		eventRepository = new ParkingEventMongoRepository(mongoClient,
 				ParkingEventMongoRepository.PARKING_DB_NAME,
 				ParkingEventMongoRepository.EVENT_COLLECTION_NAME);
-		// explicit empty the database through the repository
-		for (ParkingSlot slot : slotRepository.findAll()) {
-			slotRepository.delete(slot.getId());
-		}
+		// always start with a clean database
+		mongoClient.getDatabase(ParkingSlotMongoRepository.PARKING_DB_NAME).drop();
 		GuiActionRunner.execute(() -> {
 			parkingSwingView = new ParkingSwingView();
 			parkingController = new ParkingController(
@@ -149,6 +147,35 @@ public class ParkingSwingViewIT extends AssertJSwingJUnitTestCase {
 		await().atMost(5, TimeUnit.SECONDS).untilAsserted(() ->
 			assertThat(window.list("slotList").contents())
 				.containsExactly(new ParkingSlot("1", false).toString())
+		);
+	}
+	
+	@Test @GUITest
+	public void testShowCountsButtonSuccess() {
+		slotRepository.save(new ParkingSlot("1", false));
+		slotRepository.save(new ParkingSlot("2", true));
+		slotRepository.save(new ParkingSlot("3", false));
+		window.button(JButtonMatcher.withText("Show Counts")).click();
+		await().atMost(5, TimeUnit.SECONDS).untilAsserted(() ->
+			window.label("countsLabel")
+				.requireText("Free: 2 - Occupied: 1")
+		);
+	}
+
+	@Test @GUITest
+	public void testShowHistoryButtonSuccess() {
+		GuiActionRunner.execute(
+			() -> parkingController.addSlot(new ParkingSlot("1", false)));
+		window.list("slotList").selectItem(0);
+		window.button(JButtonMatcher.withText("Mark Occupied")).click();
+		await().atMost(5, TimeUnit.SECONDS).untilAsserted(() ->
+			assertThat(window.list("slotList").contents())
+				.containsExactly(new ParkingSlot("1", true).toString())
+		);
+		window.button(JButtonMatcher.withText("Show History")).click();
+		await().atMost(5, TimeUnit.SECONDS).untilAsserted(() ->
+			assertThat(window.list("historyList").contents())
+				.hasSize(1)
 		);
 	}
 }
